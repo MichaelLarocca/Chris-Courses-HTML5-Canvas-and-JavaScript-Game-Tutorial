@@ -5,6 +5,8 @@ console.log(c);
 canvas.width = innerWidth;
 canvas.height = innerHeight;
 
+const scoreEL = document.getElementById("scoreEL");
+console.log(scoreEL);
 class Player {
 	constructor(x, y, radius, color) {
 		this.x = x;
@@ -136,6 +138,7 @@ function spawnEnemies() {
 }
 
 let animationId;
+let score = 0;
 function animate() {
 	animationId = requestAnimationFrame(animate);
 	c.fillStyle = "rgba(0,0,0,.1)";
@@ -178,6 +181,7 @@ function animate() {
 
 			// When projectiles touch enemy
 			if (dist - enemy.radius - projectile.radius < 1) {
+				// Create explosions
 				for (let i = 0; i < enemy.radius * 2; i++) {
 					particles.push(
 						new Particle(
@@ -193,7 +197,10 @@ function animate() {
 					);
 				}
 				if (enemy.radius - 10 > 5) {
-					// enemy.radius -= 10;
+					// Increase score
+					score += 100;
+					scoreEL.innerHTML = score;
+
 					gsap.to(enemy, {
 						radius: enemy.radius - 10,
 					});
@@ -201,6 +208,9 @@ function animate() {
 						projectiles.splice(projectileIndex, 1);
 					}, 0);
 				} else {
+					// Increase score
+					score += 250;
+					scoreEL.innerHTML = score;
 					setTimeout(() => {
 						enemies.splice(index, 1);
 						projectiles.splice(projectileIndex, 1);
