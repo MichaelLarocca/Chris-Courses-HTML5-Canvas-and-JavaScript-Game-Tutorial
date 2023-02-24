@@ -28,6 +28,10 @@ class Player {
 		c.beginPath();
 		c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
 		c.fillStyle = this.color;
+		c.shadowColor = "";
+		c.shadowBlur = 0;
+		c.shadowOffsetX = 0;
+		c.shadowOffsetY = 0;
 		c.fill();
 	}
 }
@@ -172,6 +176,10 @@ let animationId;
 let score = 0;
 function animate() {
 	animationId = requestAnimationFrame(animate);
+	c.shadowColor = "";
+	c.shadowBlur = 0;
+	c.shadowOffsetX = 0;
+	c.shadowOffsetY = 0;
 	c.fillStyle = "rgba(0,0,0,.1)";
 	c.fillRect(0, 0, canvas.width, canvas.height);
 	player.draw();
