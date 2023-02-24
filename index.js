@@ -5,8 +5,16 @@ console.log(c);
 canvas.width = innerWidth;
 canvas.height = innerHeight;
 
+let flagGameOver = true;
+//Audio
+const asteroidHit = new Audio("audio/Asteroid-Hit.mp3");
+const soundLaser = new Audio("audio/dist_audio_lasrhit2.mp3");
+soundLaser.volume = 0.1;
+
+const startGameBtn = document.getElementById("startGameBtn");
 const scoreEL = document.getElementById("scoreEL");
-console.log(scoreEL);
+const modalEL = document.getElementById("modalEL");
+const bigScoreEl = document.getElementById("bigScoreEl");
 class Player {
 	constructor(x, y, radius, color) {
 		this.x = x;
@@ -35,6 +43,12 @@ class Projectile {
 	draw() {
 		c.beginPath();
 		c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+
+		c.shadowColor = "red";
+		c.shadowBlur = 15;
+		c.shadowOffsetX = 3;
+		c.shadowOffsetY = 3;
+
 		c.fillStyle = this.color;
 		c.fill();
 	}
@@ -59,6 +73,12 @@ class Enemy {
 		c.beginPath();
 		c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
 		c.fillStyle = this.color;
+
+		c.shadowColor = "";
+		c.shadowBlur = 0;
+		c.shadowOffsetX = 0;
+		c.shadowOffsetY = 0;
+
 		c.fill();
 	}
 
@@ -174,6 +194,13 @@ function animate() {
 		if (dist - enemy.radius - player.radius < 1) {
 			console.log(`End Game!`);
 			cancelAnimationFrame(animationId);
+			modalEL.style.display = "flex";
+			soundLaser.pause();
+			soundLaser.currentTime = 0;
+			asteroidHit.pause();
+			asteroidHit.currentTime = 0;
+			flagGameOver = true;
+			bigScoreEl.innerHTML = score;
 		}
 
 		projectiles.forEach((projectile, projectileIndex) => {
@@ -182,6 +209,10 @@ function animate() {
 			// When projectiles touch enemy
 			if (dist - enemy.radius - projectile.radius < 1) {
 				// Create explosions
+				asteroidHit.pause();
+				7;
+				asteroidHit.currentTime = 0;
+				asteroidHit.play();
 				for (let i = 0; i < enemy.radius * 2; i++) {
 					particles.push(
 						new Particle(
@@ -223,6 +254,13 @@ function animate() {
 
 addEventListener("click", (event) => {
 	console.log(event);
+
+	if (!flagGameOver) {
+		soundLaser.pause();
+		soundLaser.currentTime = 0;
+		soundLaser.play();
+	}
+
 	const angle = Math.atan2(
 		event.clientY - canvas.height / 2,
 		event.clientX - canvas.width / 2
@@ -233,9 +271,13 @@ addEventListener("click", (event) => {
 		y: Math.sin(angle) * 5,
 	};
 	projectiles.push(
-		new Projectile(canvas.width / 2, canvas.height / 2, 5, "white", velocity)
+		new Projectile(canvas.width / 2, canvas.height / 2, 4, "white", velocity)
 	);
 });
 
-animate();
-spawnEnemies();
+startGameBtn.addEventListener("click", () => {
+	animate();
+	spawnEnemies();
+	modalEL.style.display = "none";
+	flagGameOver = false;
+});
