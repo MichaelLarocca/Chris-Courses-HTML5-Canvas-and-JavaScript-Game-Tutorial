@@ -6,6 +6,7 @@ canvas.width = innerWidth;
 canvas.height = innerHeight;
 
 let flagGameOver = true;
+
 //Audio
 const asteroidHit = new Audio("audio/Asteroid-Hit.mp3");
 const soundLaser = new Audio("audio/dist_audio_lasrhit2.mp3");
@@ -123,10 +124,20 @@ class Particle {
 const x = canvas.width / 2;
 const y = canvas.height / 2;
 
-const player = new Player(x, y, 10, "white");
-const projectiles = [];
-const enemies = [];
-const particles = [];
+let player = new Player(x, y, 10, "white");
+let projectiles = [];
+let enemies = [];
+let particles = [];
+
+function init() {
+	player = new Player(x, y, 10, "white");
+	projectiles = [];
+	enemies = [];
+	particles = [];
+	score = 0;
+	scoreEL.innerHTML = score;
+	bigScoreEl.innerHTML = score;
+}
 
 function spawnEnemies() {
 	setInterval(() => {
@@ -276,6 +287,7 @@ addEventListener("click", (event) => {
 });
 
 startGameBtn.addEventListener("click", () => {
+	init();
 	animate();
 	spawnEnemies();
 	modalEL.style.display = "none";
